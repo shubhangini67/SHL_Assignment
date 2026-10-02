@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+kaggle.json
+data/
+cache/
+*.wav
+*.mp3
+*.npy
+.python-version
