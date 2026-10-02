@@ -53,7 +53,7 @@ def feature_correlations(corr: pd.Series) -> Path:
     ax.barh(top.index[::-1], top.values[::-1], color=colors[::-1])
     ax.axvline(0, color="black", linewidth=0.6)
     ax.set_xlabel("Pearson r with grammar score")
-    ax.set_title("Which measurements track the rubric")
+    ax.set_title("Which measurements follow the score")
     return _save(fig, "feature_correlations.png")
 
 
@@ -84,7 +84,7 @@ def residuals(y, pred) -> Path:
     ax.axhline(0, color=TEAL, linewidth=1.2)
     ax.set_xlabel("Cross-validated prediction")
     ax.set_ylabel("Prediction − actual")
-    ax.set_title("Residual plot (out of fold)")
+    ax.set_title("5-fold residuals")
     return _save(fig, "residuals.png")
 
 
@@ -94,7 +94,7 @@ def importance(table: pd.DataFrame) -> Path:
     fig, ax = plt.subplots(figsize=(8, 5.5))
     ax.barh(top["feature"], top["importance"], color=NAVY, xerr=top["importance_std"], ecolor="#9bb3c9")
     ax.set_xlabel("Permutation importance (RMSE increase)")
-    ax.set_title("Features the model actually uses")
+    ax.set_title("Which features the model uses")
     return _save(fig, "feature_importance.png")
 
 

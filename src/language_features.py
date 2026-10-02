@@ -1,8 +1,7 @@
-"""Hand-built language features, each tied to a line of the grammar rubric.
+"""Counts I can explain from the marking guide.
 
-The rubric asks about sentence structure, grammatical mistakes, incomplete
-sentences, self-correction, and control of complex grammar. Spectral features
-do not measure those things. These do.
+Sentence shape, mistakes, unfinished sentences, and self-corrections.
+I do not use spectral features for those.
 """
 
 from __future__ import annotations
@@ -24,8 +23,7 @@ REPAIR_PHRASES = (
     "i should say",
     "what i meant",
 )
-# Markers of dependent clauses. "that" is left out on purpose: it is usually
-# a pronoun or determiner, so counting it mostly measures word frequency.
+# Words that start a dependent clause. I skip "that" because it is usually just "that".
 SUBORDINATORS = {
     "because", "although", "though", "unless", "whereas", "whether",
     "while", "which", "who", "if", "when", "since", "before", "after",
@@ -229,7 +227,7 @@ def load_spacy():
         from spacy.cli import download
         download("en_core_web_sm")
         nlp = spacy.load("en_core_web_sm")
-    # NER is unused. The parser and tagger are what the rubric features need.
+    # I only need the parser and the part-of-speech tags.
     if "ner" in nlp.pipe_names:
         nlp.disable_pipes("ner")
     return nlp

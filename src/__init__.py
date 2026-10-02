@@ -1,1 +1,1 @@
-"""Grammar scoring engine for the SHL Hiring Assessment 2026."""
+"""Grammar scoring for the SHL hiring task."""

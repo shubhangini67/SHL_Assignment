@@ -1,10 +1,7 @@
-"""Transcribe with Whisper, and keep a more literal CTC transcript.
+"""Two transcripts.
 
-Whisper is a strong speech recognizer, but its decoder is trained to write
-fluent English, so it often repairs the grammar we are supposed to score.
-The CTC model (wav2vec2) has no language-model decoder and stays closer to
-what was said. Fluency and timing come from Whisper. Grammar features are
-computed on the literal transcript when it is available.
+Whisper is good at timing, but it cleans up bad grammar. wav2vec2 stays
+closer to what was said. I use Whisper for pauses and wav2vec2 for grammar.
 """
 
 from __future__ import annotations

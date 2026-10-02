@@ -1,7 +1,6 @@
-"""Neural text measurements: acceptability, correction effort, perplexity, embeddings.
+"""Acceptability, grammar edits, perplexity, and a text embedding.
 
-Models are loaded one at a time. A 16 GB machine cannot hold Whisper, wav2vec2,
-RoBERTa, T5, and GPT-2 together, and it does not need to.
+I load one model at a time. My Mac has 16 GB and cannot hold all of them.
 """
 
 from __future__ import annotations
@@ -48,7 +47,7 @@ def split_sentences(text: str) -> list[str]:
         if len(words) <= 32:
             sentences.append(part.strip())
             continue
-        # CTC transcripts have no punctuation, so long stretches are windowed.
+        # No full stops, so I cut long text into windows of about 20 words.
         for start in range(0, len(words), 20):
             window = " ".join(words[start:start + 20]).strip()
             if window:
@@ -92,8 +91,7 @@ def cola_and_gec(ids: list[str], texts: list[str], correct: bool = True) -> pd.D
     cola_tok = AutoTokenizer.from_pretrained(COLA_MODEL)
     cola = AutoModelForSequenceClassification.from_pretrained(COLA_MODEL).to(dev)
     cola.eval()
-    # CoLA's positive class is "acceptable". Some checkpoints only name it LABEL_1,
-    # which is the GLUE convention, so 1 is the fallback.
+    # The "acceptable" class. If the model only says LABEL_1, I use index 1.
     accept_index = 1
     for idx, name in cola.config.id2label.items():
         label = str(name).lower()

@@ -1,7 +1,7 @@
-"""Download the private Kaggle competition into data/.
+"""Download the Kaggle files into data/.
 
-Requires a valid token in ~/.kaggle/kaggle.json
-(Kaggle -> Settings -> API -> Create New Token).
+Needs a token in ~/.kaggle/kaggle.json
+(Kaggle, Settings, API, Create New Token).
 """
 
 import subprocess

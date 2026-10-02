@@ -1,11 +1,8 @@
-"""Cross-validated regression and a two-view blend.
+"""5-fold regression, then a mix of two models.
 
-View 1 is the rubric features (a tree or a linear model).
-View 2 is a regularized regression on text embeddings, which picks up
-vocabulary and clause patterns the hand-built features miss.
-
-The blend weight is chosen without looking at the fold being scored.
-That keeps the cross-validated Pearson and RMSE honest.
+One model uses the counts from the marking guide.
+The other uses a text embedding. I pick the mix weight on the other folds,
+so the fold I am scoring does not choose its own weight.
 """
 
 from __future__ import annotations
@@ -49,8 +46,7 @@ def make_folds(y: np.ndarray, audio_ids: list[str], n_splits: int = N_SPLITS):
         folder = GroupKFold(n_splits=splits)
         return list(folder.split(np.zeros(len(y)), y, groups)), "group"
 
-    # Likert scores are discrete. Stratifying on the rounded score keeps every
-    # fold in the same score range, which stabilises Pearson on a small set.
+    # Round the score and stratify when every bin has enough clips.
     rounded = np.rint(np.asarray(y)).astype(int)
     counts = pd.Series(rounded).value_counts()
     if counts.size >= 2 and int(counts.min()) >= n_splits:

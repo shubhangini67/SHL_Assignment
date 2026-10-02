@@ -1,7 +1,7 @@
-"""Build one feature row per clip and cache it.
+"""One feature row per clip, saved so the next run can skip the slow steps.
 
-The grammar transcript is the literal CTC text when that pass succeeded.
-Whisper text is the fallback, and it is always the source of timing features.
+Grammar features use the wav2vec2 text when it has enough words.
+Timing features always come from Whisper.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ def build_split(frame: pd.DataFrame, cache_dir: Path = CACHE_DIR) -> tuple[pd.Da
     whisper = transcribe_whisper(frame, cache_dir)
     literal, acoustic = transcribe_literal(frame, cache_dir)
     ids = frame["audio_id"].tolist()
-    # Literal transcript, with capitals restored to normal case for the grammar models.
+    # wav2vec2 writes in capitals. I change that back before the grammar models.
     grammar_texts = [normalize_ctc_case(_grammar_text(i, whisper, literal)) for i in ids]
     whisper_texts = [(whisper.get(i, {}).get("text") or "") for i in ids]
 
@@ -52,8 +52,7 @@ def build_split(frame: pd.DataFrame, cache_dir: Path = CACHE_DIR) -> tuple[pd.Da
     for audio_id, whisper_text, grammar_text in zip(ids, whisper_texts, grammar_texts):
         row = {"audio_id": audio_id}
         row.update(delivery_features(whisper.get(audio_id, {})))
-        # Sentence structure needs punctuation. Whisper has it; the CTC transcript
-        # usually does not, so a 60 s literal transcript would be one fake sentence.
+        # Sentence shape needs full stops. Whisper has them. wav2vec2 usually does not.
         structure_text = whisper_text.strip() or grammar_text
         row.update(syntax_features(structure_text, nlp))
         row.update(acoustic.get(audio_id, {}))
@@ -69,9 +68,7 @@ def build_split(frame: pd.DataFrame, cache_dir: Path = CACHE_DIR) -> tuple[pd.Da
     except Exception as exc:
         print(f"Acceptability / grammar-correction step failed ({exc}). Those features will be empty.")
         neural = pd.DataFrame({"audio_id": ids})
-    # Acceptability of the Whisper text minus acceptability of the literal text.
-    # Whisper often rewrites ungrammatical speech, so this gap is a candidate
-    # repair signal. The regression keeps it only when it predicts the score.
+    # Whisper often cleans up the grammar. The gap vs wav2vec2 is kept only if it helps.
     whisper_changed = [w.strip() != g.strip() for w, g in zip(whisper_texts, grammar_texts)]
     if any(whisper_changed):
         try:
@@ -98,8 +95,7 @@ def build_split(frame: pd.DataFrame, cache_dir: Path = CACHE_DIR) -> tuple[pd.Da
         emb = np.zeros((len(ids), 32), dtype=np.float32)
 
     features = hand.merge(neural, on="audio_id", how="left").merge(ppl, on="audio_id", how="left")
-    # Log perplexity is easier for a tree to split, and a few pathological
-    # transcripts would otherwise dominate the raw exponential value.
+    # Log perplexity, so one weird transcript does not dominate.
     features["gpt2_log_perplexity"] = np.log(pd.to_numeric(features["gpt2_perplexity"], errors="coerce").clip(lower=1))
     if "whisper_cola_mean" in features.columns and "cola_mean" in features.columns:
         features["cola_repair_gap"] = features["whisper_cola_mean"] - features["cola_mean"]

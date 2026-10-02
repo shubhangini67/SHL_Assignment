@@ -1,4 +1,4 @@
-"""End-to-end run: audio in, submission.csv and the required training RMSE out."""
+"""Full run. Audio in, submission file and training RMSE out."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import traceback
 
 os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
-# The Xet download path currently 404s for some public models, including GPT-2.
+# Some model downloads fail on the Xet path. GPT-2 is one of them.
 os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
 
 from pathlib import Path
@@ -51,8 +51,8 @@ def _banner(train_scores: dict, cv_scores: dict) -> str:
         f"CV RMSE:                  {cv_scores['rmse']:.4f}",
         f"CV Pearson r:             {cv_scores['pearson']:.4f}",
         line,
-        "Training RMSE is the in-sample error of the final model.",
-        "CV RMSE and CV Pearson are the estimates of test-set performance.",
+        "Training RMSE is the error on clips the model has already seen.",
+        "The 5-fold RMSE and Pearson are closer to the leaderboard.",
     ])
     print("\n" + text + "\n")
     return text
@@ -88,27 +88,27 @@ def run(data_dir: Path | None = None) -> dict:
         if feature in matrix.columns:
             score_vs_feature(labels, matrix[feature], xlabel, filename)
 
-    print("\nFitting models with cross-validation.")
+    print("\nFitting models with 5-fold checks.")
     cv = cross_validate(matrix, labels, train_emb, data.train["audio_id"].astype(str).tolist())
     print("\nOut-of-fold scores")
     for name, scores in cv["scores"].items():
         print(f"  {name:20s}  RMSE {scores['rmse']:.4f}   Pearson {scores['pearson']:.4f}")
     print(
-        f"Selected tabular model: {cv['tabular_name']}  "
-        f"blend weight on tabular features: {cv['blend_weight_tabular']:.2f}  "
-        f"calibration used: {cv['calibration']['used']}"
+        f"Main model: {cv['tabular_name']}  "
+        f"weight on the hand-built features: {cv['blend_weight_tabular']:.2f}  "
+        f"extra calibration: {cv['calibration']['used']}"
     )
 
     train_pred, test_pred, model = fit_full(matrix, labels, train_emb, test_matrix, test_emb, cv)
-    # sample_submission.csv names 99 clips that are not in the published audio.
-    # A model has nothing to score there, so those rows get the training mean.
+    # 99 names in sample_submission.csv have no wav in the zip.
+    # I put the average training score on those rows.
     has_audio = data.test["audio_path"].map(lambda p: isinstance(p, str) and Path(p).is_file())
     n_missing_audio = int((~has_audio).sum())
     if n_missing_audio:
         fallback = float(np.mean(labels))
         print(
-            f"{n_missing_audio} submission files have no wav in the competition bundle. "
-            f"Those scores are the training-set mean ({fallback:.4f})."
+            f"{n_missing_audio} rows have no wav in the zip. "
+            f"I used the average training score for them ({fallback:.4f})."
         )
         test_pred = np.asarray(test_pred, dtype=float).copy()
         test_pred[~has_audio.to_numpy()] = fallback
@@ -212,12 +212,7 @@ def _validate_submission(submission: pd.DataFrame, sample: pd.DataFrame, id_colu
 
 
 def _stamp_notebook(metrics: dict) -> None:
-    """Write the required training RMSE into the notebook file itself.
-
-    A print in a cell is not enough: the competition asks for the number
-    in the submitted notebook, including when the run was started from
-    run_pipeline.py rather than from Jupyter.
-    """
+    """Put the training RMSE into the notebook, not only on the screen."""
     import nbformat
 
     from src.config import PROJECT_ROOT
@@ -237,20 +232,20 @@ def _stamp_notebook(metrics: dict) -> None:
         f"**5-fold CV Pearson r: {metrics['cv_pearson']:.4f}**",
         "",
         (
-            f"Tabular model: `{metrics['tabular_model']}`. "
-            f"Blend weight on the rubric features: {metrics['blend_weight_tabular']:.2f}. "
-            f"Calibration used: {metrics['calibration']['used']}. "
+            f"Main model: `{metrics['tabular_model']}`. "
+            f"Weight on the hand-built features: {metrics['blend_weight_tabular']:.2f}. "
+            f"Extra calibration: {metrics['calibration']['used']}. "
             f"Folds: {metrics['fold_kind']}. "
             f"Features: {metrics['n_features']}. "
             f"Train clips: {metrics['n_train']}. "
-            f"Test clips: {metrics['n_test']}."
+            f"Rows to submit: {metrics['n_test']}."
         ),
         "",
-        "The training RMSE is the error of the submitted model on the training clips. The cross-validated RMSE and Pearson estimate the leaderboard.",
+        "Training RMSE is the error on clips the model has already seen. The 5-fold RMSE and Pearson are closer to the leaderboard.",
         "",
         (
-            f"Submission rows with no published wav: {metrics.get('n_missing_audio', 0)}. "
-            "Those scores are the training-set mean, because the audio is not in the competition bundle."
+            f"Rows with no wav in the zip: {metrics.get('n_missing_audio', 0)}. "
+            "Those scores are the average training score."
         ),
     ])
     notebook = nbformat.read(path, as_version=4)

@@ -1,6 +1,6 @@
-"""Find the competition files and pair each row with its wav.
+"""Find the csvs and match each row to its wav.
 
-test.csv contains random labels. Those values are never read as targets.
+The labels in test.csv are random. I never use them as scores.
 """
 
 from __future__ import annotations
@@ -182,9 +182,8 @@ def load_competition(data_dir: Path = DATA_DIR) -> CompetitionData:
         return out
 
     train = _build(train_raw, train_ids, "train", with_label=True)
-    # Score sample_submission.csv, in its row order. Those filenames are not
-    # a subset of test.csv: many are training clips, and some are wavs that
-    # appear in neither CSV. test.csv labels stay unread.
+    # Fill sample_submission.csv in its own row order.
+    # Some names are training clips. Some wavs are missing. I do not read test.csv labels.
     test = _build(sample, sample_ids, "test", with_label=False)
     if test["submission_id"].duplicated().any():
         print("Duplicate submission ids. Keeping the first wav for each id.")
@@ -206,7 +205,7 @@ def load_competition(data_dir: Path = DATA_DIR) -> CompetitionData:
         f"label mean={train['label'].mean():.3f}  std={train['label'].std():.3f}"
     )
     print(
-        "test.csv labels are ignored. The competition states they are random."
+        "I am not using the labels in test.csv. They are random."
     )
     return CompetitionData(
         train=train.reset_index(drop=True),
