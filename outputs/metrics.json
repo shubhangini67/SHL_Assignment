@@ -1,0 +1,59 @@
+{
+  "training_rmse": 0.5348912961469384,
+  "training_pearson": 0.9041466114986754,
+  "cv_rmse": 0.639223194445392,
+  "cv_pearson": 0.8573105590411491,
+  "model_scores": {
+    "ridge": {
+      "rmse": 0.7548510843592902,
+      "pearson": 0.7929189354346279
+    },
+    "extra_trees": {
+      "rmse": 0.6677132713091073,
+      "pearson": 0.8447654794821685
+    },
+    "hgb_shallow": {
+      "rmse": 0.639223194445392,
+      "pearson": 0.8573105590411491
+    },
+    "hgb": {
+      "rmse": 0.6438058352010126,
+      "pearson": 0.8545368677134113
+    },
+    "hgb_deep": {
+      "rmse": 0.6501652270492423,
+      "pearson": 0.851207384994507
+    },
+    "text": {
+      "rmse": 1.1598572634569102,
+      "pearson": 0.3501093727593652
+    },
+    "mean_baseline": {
+      "rmse": 1.2414074751982138,
+      "pearson": -0.0961255446623902
+    },
+    "blend": {
+      "rmse": 0.639223194445392,
+      "pearson": 0.8573105590411491
+    },
+    "blend_calibrated": {
+      "rmse": 0.6388574836410151,
+      "pearson": 0.8568150986108054
+    }
+  },
+  "tabular_model": "hgb_shallow",
+  "blend_weight_tabular": 1.0,
+  "calibration": {
+    "slope": 1.0315557012075058,
+    "intercept": -0.10263116578731021,
+    "used": false
+  },
+  "fold_kind": "kfold",
+  "n_train": 769,
+  "n_test": 204,
+  "n_missing_audio": 99,
+  "n_features": 57,
+  "target_column": "label",
+  "id_column": "filename",
+  "banner": "================================================================\nTRAINING RMSE (required): 0.5349\nTRAINING Pearson r:       0.9041\nCV RMSE:                  0.6392\nCV Pearson r:             0.8573\n================================================================\nTraining RMSE is the in-sample error of the final model.\nCV RMSE and CV Pearson are the estimates of test-set performance."
+}

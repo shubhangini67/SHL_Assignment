@@ -1,0 +1,50 @@
+[
+  {
+    "band": "low",
+    "audio_id": "audio_5052",
+    "label": 0.0,
+    "oof_prediction": 0.4002191339574856,
+    "whisper": "I want to make a meeting to open my company. I really want to be my own dad. I try to work on that and apply for my master's degree. And hopefully I will start school soon and improve my stats just you know educated about my nature and then after I do good I'm going to have my own company",
+    "grammar_transcript": "I want to make a meeting to open my company. I really want to be my own dad. I try to work on that and apply for my master's degree. And hopefully I will start school soon and improve my stats just you know educated about my nature and then after I do good I'm going to have my own company"
+  },
+  {
+    "band": "low",
+    "audio_id": "audio_5039",
+    "label": 0.0,
+    "oof_prediction": 0.16096402569844648,
+    "whisper": "so The two playgrounds are a library hub for activities where students have to plan to equip and unleash their creativity. The playgrounds and perfume are done with colorful equipment and tinted lines for games.",
+    "grammar_transcript": "so The two playgrounds are a library hub for activities where students have to plan to equip and unleash their creativity. The playgrounds and perfume are done with colorful equipment and tinted lines for games."
+  },
+  {
+    "band": "low",
+    "audio_id": "audio_5044",
+    "label": 0.0,
+    "oof_prediction": 3.125318354670035,
+    "whisper": "I honestly don't think I've had the best day of my life or anything close to it. So I cannot really give my opinion on this experience or what made it special.",
+    "grammar_transcript": "I honestly don't think I've had the best day of my life or anything close to it. So I cannot really give my opinion on this experience or what made it special."
+  },
+  {
+    "band": "high",
+    "audio_id": "audio_358",
+    "label": 5.0,
+    "oof_prediction": 4.81346416129259,
+    "whisper": "um the playground it looks very it depends it could look very big or very small it just depends on the type of playground and the amount of people the demographic of the surrounding location but uh it looks very childish there's very bright colors um lots of metal right because uh it has to be structured very well because people are going to be climbing on top of it around it decided every kind of preposition that you want to add to it um are there any particular games or activities well there's your typical ones basketball soccer there might be some tennis they're playing tag there was a specific game when i was a kid that you you uh you tie this ball to your ankle and you just you do a a jump rope-esque activity where you hop on that ankle while the ball, while the, while the other leg that is, uh, that you.",
+    "grammar_transcript": "On the playground it looks very it depens icl look very big or very small it is depends on the typoplayground and the mound of people the demographic of the surrounding location but ah it looks very childish theres very bright colors umnot o metal right because a it has to be structured very well because people  be climbing on top of it around it besided every kind of preposition that you want to add to it ah are there any particular games or activities well there's durtepical ones basket ball socker mit there might be some tennis they're playing tag there was a spiss of gim when i was akin that you you a you tie this ball to your ankle and just you do a a jump rope esq activity where it you hop on that ankle while the balt while the while the other leg that is a than you"
+  },
+  {
+    "band": "high",
+    "audio_id": "audio_667",
+    "label": 5.0,
+    "oof_prediction": 4.687813306411045,
+    "whisper": "it's funny you asked this question because i think we had the same question earlier in the test so my goal ultimately is to travel around the world with my partner um obviously being travel travel was expensive finances are probably the biggest hurdle for this goal but i think it's doable the only thing that's difficult is trying to purchase a house between the travel. Motivation, I think just wanting to know more about other cultures is probably what motivates me and it is so nice to see my partner's face light up when something new happens and it's exciting. It's exciting for me as well but just seeing his reaction lights up my entire world. It is the best feeling and I can't get enough of it. Thank you.",
+    "grammar_transcript": "It's funny you'll ask this question because i think we had the same question earlier in the test so my goal ultimately is to travel around the world with my partner am obviously being travelled travellers expensive finances are probably the biggest hurtle for this gal but i think it's duable the only thing that's difficult is trying to purchase a house between the travel a motivation i think just wanting to know more about other cultures is probably what motiveates me and it is so nice to see my partner's face light up when something new happens and it's exciting s exciting for me as well but just seeing his reaction lights up my entire world it is the best feeling and i can't get enough of it"
+  },
+  {
+    "band": "high",
+    "audio_id": "audio_331",
+    "label": 5.0,
+    "oof_prediction": 4.9325088863348645,
+    "whisper": "there's a bustling market it is crowded stuffed with people at the crack of dawn even before dawn the market's bustling moving in and out mostly fish it's a little ways down from the docks there are multitudes of fish of every single variety live fresh and frozen flash frozen at sea and brought in. There are people walking around in huge crowds gathering around the market stalls looking for the best catch of the day to bring to their local restaurant or grocery store. There are giant tuna that are being graded and examined flash frozen at sea. On huge pallets these things weigh hundreds of pounds. The smell of fish is everywhere, but you can't hardly notice it after spending a few minutes in there.",
+    "grammar_transcript": "There's a bustling market it is crowded stuffed with people at the crack of dawn even before dawn the markets bustling moving in and out mostly fish it's a little ways down from the docks there are multitudes of fish of every single variety live fresh and frozen flash frozen at sea and brought in there are people wanking around in hu uge crowds gathering around the market stalls looking for the best catch of the day to bring to their local restaurant or grocery store there are giant tuna that the re being grated and examined flash frozen at sea on huge pallates these things way hundreds of pounds the smell of fish is everywhere but you can't hardly notice it after spending a few minutes in there"
+  }
+]
